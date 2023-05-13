@@ -6,7 +6,7 @@ const asyncErrorBoundary = require("../../utils/asyncErrorBoundary");
 
 async function list(req, res) {
   const { date } = req.query;
-  const today = new Date()
+  const today = new Date();
   let data;
   if (date) {
     data = await service.list(date);
@@ -16,12 +16,23 @@ async function list(req, res) {
   res.json({ data });
 }
 
+function pastValidator(req, res, next) {
+  const { reservation_date } = req.body.data;
+  const today = new Date();
+  if (today > new Date(`reservation_date reservation_date`)) {
+    return next({
+      status: 400,
+      message: `reservation_time and reservation_date must be in the future.`,
+    });
+  } else {
+    return next();
+  }
+}
 
 function timeValidator(req, res, next) {
   let regEx = new RegExp(/^([01]\d|2[0-3]):?([0-5]\d)$/);
   const { reservation_time } = req.body.data;
-  const currentTime = new Date().toLocaleTimeString()
-   if (reservation_time < "10:30") {
+  if (reservation_time < "10:30") {
     return next({
       status: 400,
       message: `reservation_time must be after 10:30 AM`,
@@ -31,11 +42,6 @@ function timeValidator(req, res, next) {
       status: 400,
       message: `reservation_time must be before 9:30 PM`,
     });
-  } else if (reservation_time < currentTime) {
-    return next({
-      status: 400,
-      message: `The reservation date and time combination is in the past.`
-    })
   } else if (regEx.test(reservation_time) == true) {
     return next();
   } else if (reservation_time == null) {
@@ -66,18 +72,12 @@ function peopleValidator(req, res, next) {
 function dateValidator(req, res, next) {
   const { reservation_date } = req.body.data;
   const date = Date.parse(reservation_date);
-  const today = new Date()
-  const dayCheck = new Date(reservation_date)
-  const day = dayCheck.getUTCDay()
+  const dayCheck = new Date(reservation_date);
+  const day = dayCheck.getUTCDay();
   if (day == 2) {
     return next({
       status: 400,
       message: `The restaurant is closed on Tuesdays`,
-    });
-  } else if (date && date < today) {
-    return next({
-      status: 400,
-      message: `The reservation_date and time combination is in the past. Only future reservations are allowed`,
     });
   } else if (!date || date < 0) {
     return next({
@@ -136,6 +136,7 @@ module.exports = {
     asyncErrorBoundary(peopleValidator),
     asyncErrorBoundary(dateValidator),
     asyncErrorBoundary(timeValidator),
+    asyncErrorBoundary(pastValidator),
     // asyncErrorBoundary(numberValidator),
     asyncErrorBoundary(bodyDataHas("first_name")),
     asyncErrorBoundary(bodyDataHas("last_name")),
