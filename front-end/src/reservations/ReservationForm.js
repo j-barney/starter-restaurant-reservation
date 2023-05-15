@@ -59,6 +59,7 @@ function ReservationForm() {
         <h3>Edit Reservation</h3>
       )}
       <form className="form-group" name="createReservation">
+      <div class="form-outline w-25">
         <label className="my-3" htmlFor="first name">
           First Name
         </label>
@@ -219,6 +220,7 @@ function ReservationForm() {
             rows="1"
           />
         )}
+        </div>
         <div className="container">
           <div className="row">
             <div className="flex btn-group">

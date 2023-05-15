@@ -6,20 +6,18 @@ const asyncErrorBoundary = require("../../utils/asyncErrorBoundary");
 
 async function list(req, res) {
   const { date } = req.query;
-  const today = new Date();
+  // const today = new Date();
   let data;
   if (date) {
     data = await service.list(date);
-  } else {
-    data = await service.list(today);
   }
   res.json({ data });
 }
 
 function pastValidator(req, res, next) {
-  const { reservation_date } = req.body.data;
+  const { reservation_date, reservation_time } = req.body.data;
   const today = new Date();
-  if (today > new Date(`reservation_date reservation_date`)) {
+  if (today > new Date(`${reservation_date} ${reservation_time}`)) {
     return next({
       status: 400,
       message: `reservation_time and reservation_date must be in the future.`,
@@ -106,22 +104,21 @@ function bodyDataHas(propertyName) {
     if (req.body.data[propertyName]) {
       return next();
     }
-    next({ status: 400, message: `Order must include a ${propertyName}` });
+    next({ status: 400, message: `Reservation must include a ${propertyName}` });
   };
 }
 
 async function reservationExists(req, res, next) {
-  const currentRes = await service.read(req.params.reservationId);
+  const currentRes = await service.read(req.params.reservation_id);
   if (currentRes) {
-    res.locals.reservation = reservation;
+    res.locals.reservation = currentRes;
     return next();
   }
-  next({ status: 404, message: `Reservation cannot be found.` });
+  next({ status: 404, message: `Reservation ${req.params.reservation_id} cannot be found.` });
 }
 
 async function read(req, res) {
-  const { reservation: data } = res.locals;
-  res.json({ data });
+  res.status(200).json({ data: res.locals.reservation });
 }
 
 async function create(req, res, next) {
