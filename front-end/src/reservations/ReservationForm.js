@@ -32,7 +32,7 @@ function ReservationForm() {
     }
   };
 
-  function submitHandler(event) {
+  const submitHandler = (event) => {
     event.preventDefault();
     const abortController = new AbortController();
 
@@ -59,7 +59,7 @@ function ReservationForm() {
         <h3>Edit Reservation</h3>
       )}
       <form className="form-group" name="createReservation">
-      <div class="form-outline w-25">
+      <div className="form-outline w-25">
         <label className="my-3" htmlFor="first name">
           First Name
         </label>
@@ -72,6 +72,7 @@ function ReservationForm() {
             required={true}
             onChange={handleChange}
             placeholder="First Name"
+            value={reservation.first_name}
           />
         ) : (
           <input
@@ -81,7 +82,7 @@ function ReservationForm() {
             id="first_name"
             required={true}
             onChange={handleChange}
-            // value={reservationI}
+            value={reservation.first_name}
           />
         )}
         <label className="my-3" htmlFor="last_name">
@@ -97,6 +98,7 @@ function ReservationForm() {
             onChange={handleChange}
             placeholder="Last Name"
             rows="1"
+            value={reservation.last_name}
           />
         ) : (
           <input
@@ -106,7 +108,7 @@ function ReservationForm() {
             tyoe="text"
             required={true}
             onChange={handleChange}
-            // value={last_name}
+            value={reservation.last_name}
             rows="1"
           />
         )}
@@ -125,6 +127,7 @@ function ReservationForm() {
             onChange={handleChange}
             placeholder="Mobile Number"
             rows="1"
+            value={reservation.mobile_number}
           />
         ) : (
           <input
@@ -135,7 +138,7 @@ function ReservationForm() {
             id="mobile_number"
             required={true}
             onChange={handleChange}
-            // value={last_name}
+            value={reservation.mobile_number}
             rows="1"
           />
         )}
@@ -153,6 +156,7 @@ function ReservationForm() {
             onChange={handleChange}
             placeholder="Reservation Date"
             rows="1"
+            value={reservation.reservation_date}
           />
         ) : (
           <input
@@ -162,7 +166,7 @@ function ReservationForm() {
             type="date"
             required={true}
             onChange={handleChange}
-            // value={last_name}
+            value={reservation.reservation_date}
             rows="1"
           />
         )}
@@ -180,6 +184,7 @@ function ReservationForm() {
             onChange={handleChange}
             placeholder="Reservation Time"
             rows="1"
+            value={reservation.reservation_time}
           />
         ) : (
           <input
@@ -189,7 +194,7 @@ function ReservationForm() {
             type="time"
             required={true}
             onChange={handleChange}
-            // value={last_name}
+            value={reservation.reservation_time}
             rows="1"
           />
         )}
@@ -207,6 +212,7 @@ function ReservationForm() {
             onChange={handleChange}
             placeholder="Party Size"
             rows="1"
+            value={reservation.people}
           />
         ) : (
           <input
@@ -216,7 +222,7 @@ function ReservationForm() {
             type="number"
             required={true}
             onChange={handleChange}
-            // value={last_name}
+            value={reservation.people}
             rows="1"
           />
         )}
