@@ -4,10 +4,11 @@ import { Redirect, Route, Switch } from "react-router-dom";
 import Dashboard from "../dashboard/Dashboard";
 import NotFound from "./NotFound";
 import { today } from "../utils/date-time";
-import ReservationForm from "../reservations/ReservationForm"
-import useQuery from "../utils/useQuery"
-import TableSelector from "../tables/TableSelector"
+import ReservationForm from "../reservations/ReservationForm";
+import useQuery from "../utils/useQuery";
+import TableSelector from "../tables/TableSelector";
 import TablesForm from "../tables/tablesForm";
+import SearchForm from "../reservations/SearchForm";
 
 /**
  * Defines all the routes for the application.
@@ -17,7 +18,7 @@ import TablesForm from "../tables/tablesForm";
  * @returns {JSX.Element}
  */
 function Routes() {
-  const [tableLoader, setTableLoader] = useState()
+  const [tableLoader, setTableLoader] = useState();
 
   const query = useQuery();
   const searchDate = query.get("date");
@@ -31,13 +32,23 @@ function Routes() {
         <ReservationForm />
       </Route>
       <Route exact={true} path="/tables/new">
-        <TablesForm tableLoader={tableLoader} setTableLoader={setTableLoader}/>
+        <TablesForm tableLoader={tableLoader} setTableLoader={setTableLoader} />
       </Route>
       <Route exact={true} path="/reservations/:reservation_id/seat">
-        <TableSelector tableLoader={tableLoader} setTableLoader={setTableLoader}/>
+        <TableSelector
+          tableLoader={tableLoader}
+          setTableLoader={setTableLoader}
+        />
+      </Route>
+      <Route exact={true} path="/search">
+        <SearchForm />
       </Route>
       <Route path="/dashboard">
-        <Dashboard tableLoader={tableLoader} setTableLoader={setTableLoader} date={searchDate || today()} />
+        <Dashboard
+          tableLoader={tableLoader}
+          setTableLoader={setTableLoader}
+          date={searchDate || today()}
+        />
       </Route>
       <Route>
         <NotFound />

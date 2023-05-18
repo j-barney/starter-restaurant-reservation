@@ -5,9 +5,12 @@ const service = require("./reservations.service");
 const asyncErrorBoundary = require("../../utils/asyncErrorBoundary");
 
 async function list(req, res) {
-  const { date } = req.query;
+  const { date, mobile_number } = req.query;
   // const today = new Date();
   let data;
+  if (mobile_number) {
+    data = await service.search(mobile_number);
+  }
   if (date) {
     data = await service.list(date);
   }
