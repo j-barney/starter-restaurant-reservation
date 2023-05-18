@@ -1,4 +1,5 @@
 import React from "react";
+import ReservationView from "./ReservationView";
 
 function ReservationList({ reservations }) {
   return (
@@ -13,33 +14,11 @@ function ReservationList({ reservations }) {
             <th scope="col">Reservation Time</th>
             <th scope="col">Number of People</th>
             <th scope="col">Reservation Status</th>
+            <th scopt="col">Seating</th>
           </tr>
         </thead>
         {reservations.map((reservation, index) => (
-          <tbody className="table-group-divider">
-            <tr key={index}>
-              <td>{reservation.first_name}</td>
-              <td>{reservation.last_name}</td>
-              <td>{reservation.mobile_number}</td>
-              <td>{reservation.reservation_date}</td>
-              <td>{reservation.reservation_time}</td>
-              <td>{reservation.people}</td>
-              <td data-reservation-id-status={reservation.reservation_id}>
-                {reservation.status}
-              </td>
-              {reservation.status === "booked" ? (
-                <td>
-                  <button type="submit">
-                    <a
-                      href={`/reservations/${reservation.reservation_id}/seat`}
-                    >
-                      Seat
-                    </a>
-                  </button>
-                </td>
-              ) : null}
-            </tr>
-          </tbody>
+          <ReservationView index={index} reservation={reservation} />
         ))}
       </table>
     </div>

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import { createReservation } from "../utils/api";
 import ErrorAlert from "../layout/ErrorAlert";
+import { formatAsDate } from "../utils/date-time";
 
 function ReservationForm() {
   const initialFormState = {
@@ -35,20 +36,21 @@ function ReservationForm() {
   const submitHandler = (event) => {
     event.preventDefault();
     const abortController = new AbortController();
+    const resDate = formatAsDate(reservation.reservation_date);
 
     createReservation({
       ...reservation,
     })
       .then(() => {
-        history.push(`/dashboard?date=${reservation.reservation_date}`);
+        history.push(`/dashboard?date=${resDate}`);
       })
       .catch(setErrors);
 
-      if(!errors) {
+    if (!errors) {
       setreservation({ ...initialFormState });
-      }
-        return () => abortController.abort();
-  }
+    }
+    return () => abortController.abort();
+  };
 
   return (
     <div>
@@ -59,173 +61,173 @@ function ReservationForm() {
         <h3>Edit Reservation</h3>
       )}
       <form className="form-group" name="createReservation">
-      <div className="form-outline w-25">
-        <label className="my-3" htmlFor="first name">
-          First Name
-        </label>
-        {!reservationId ? (
-          <input
-            className="form-control"
-            name="first_name"
-            type="text"
-            id="first_name"
-            required={true}
-            onChange={handleChange}
-            placeholder="First Name"
-            value={reservation.first_name}
-          />
-        ) : (
-          <input
-            className="form-control"
-            name="first_name"
-            type="text"
-            id="first_name"
-            required={true}
-            onChange={handleChange}
-            value={reservation.first_name}
-          />
-        )}
-        <label className="my-3" htmlFor="last_name">
-          Last Name
-        </label>
-        {!reservationId ? (
-          <input
-            className="form-control"
-            name="last_name"
-            id="last_name"
-            type="text"
-            required={true}
-            onChange={handleChange}
-            placeholder="Last Name"
-            rows="1"
-            value={reservation.last_name}
-          />
-        ) : (
-          <input
-            className="form-control"
-            name="last_name"
-            id="last_name"
-            tyoe="text"
-            required={true}
-            onChange={handleChange}
-            value={reservation.last_name}
-            rows="1"
-          />
-        )}
+        <div className="form-outline w-25">
+          <label className="my-3" htmlFor="first name">
+            First Name
+          </label>
+          {!reservationId ? (
+            <input
+              className="form-control"
+              name="first_name"
+              type="text"
+              id="first_name"
+              required={true}
+              onChange={handleChange}
+              placeholder="First Name"
+              value={reservation.first_name}
+            />
+          ) : (
+            <input
+              className="form-control"
+              name="first_name"
+              type="text"
+              id="first_name"
+              required={true}
+              onChange={handleChange}
+              value={reservation.first_name}
+            />
+          )}
+          <label className="my-3" htmlFor="last_name">
+            Last Name
+          </label>
+          {!reservationId ? (
+            <input
+              className="form-control"
+              name="last_name"
+              id="last_name"
+              type="text"
+              required={true}
+              onChange={handleChange}
+              placeholder="Last Name"
+              rows="1"
+              value={reservation.last_name}
+            />
+          ) : (
+            <input
+              className="form-control"
+              name="last_name"
+              id="last_name"
+              tyoe="text"
+              required={true}
+              onChange={handleChange}
+              value={reservation.last_name}
+              rows="1"
+            />
+          )}
 
-        <label className="my-3" htmlFor="mobile_number">
-          Mobile Number
-        </label>
-        {!reservationId ? (
-          <input
-            className="form-control"
-            name="mobile_number"
-            type="text"
-            maxLength="10"
-            id="mobile_number"
-            required={true}
-            onChange={handleChange}
-            placeholder="Mobile Number"
-            rows="1"
-            value={reservation.mobile_number}
-          />
-        ) : (
-          <input
-            className="form-control"
-            name="mobile_number"
-            type="number"
-            maxLength="10"
-            id="mobile_number"
-            required={true}
-            onChange={handleChange}
-            value={reservation.mobile_number}
-            rows="1"
-          />
-        )}
+          <label className="my-3" htmlFor="mobile_number">
+            Mobile Number
+          </label>
+          {!reservationId ? (
+            <input
+              className="form-control"
+              name="mobile_number"
+              type="text"
+              maxLength="10"
+              id="mobile_number"
+              required={true}
+              onChange={handleChange}
+              placeholder="Mobile Number"
+              rows="1"
+              value={reservation.mobile_number}
+            />
+          ) : (
+            <input
+              className="form-control"
+              name="mobile_number"
+              type="number"
+              maxLength="10"
+              id="mobile_number"
+              required={true}
+              onChange={handleChange}
+              value={reservation.mobile_number}
+              rows="1"
+            />
+          )}
 
-        <label className="my-3" htmlFor="reservation_date">
-          Reservation Date
-        </label>
-        {!reservationId ? (
-          <input
-            className="form-control"
-            name="reservation_date"
-            type="date"
-            id="reservation_date"
-            required={true}
-            onChange={handleChange}
-            placeholder="Reservation Date"
-            rows="1"
-            value={reservation.reservation_date}
-          />
-        ) : (
-          <input
-            className="form-control"
-            name="reservation_date"
-            id="reservation_date"
-            type="date"
-            required={true}
-            onChange={handleChange}
-            value={reservation.reservation_date}
-            rows="1"
-          />
-        )}
+          <label className="my-3" htmlFor="reservation_date">
+            Reservation Date
+          </label>
+          {!reservationId ? (
+            <input
+              className="form-control"
+              name="reservation_date"
+              type="date"
+              id="reservation_date"
+              required={true}
+              onChange={handleChange}
+              placeholder="Reservation Date"
+              rows="1"
+              value={reservation.reservation_date}
+            />
+          ) : (
+            <input
+              className="form-control"
+              name="reservation_date"
+              id="reservation_date"
+              type="date"
+              required={true}
+              onChange={handleChange}
+              value={reservation.reservation_date}
+              rows="1"
+            />
+          )}
 
-        <label className="my-3" htmlFor="reservation_time">
-          Reservation Time
-        </label>
-        {!reservationId ? (
-          <input
-            className="form-control"
-            name="reservation_time"
-            type="time"
-            id="reservation_time"
-            required={true}
-            onChange={handleChange}
-            placeholder="Reservation Time"
-            rows="1"
-            value={reservation.reservation_time}
-          />
-        ) : (
-          <input
-            className="form-control"
-            name="reservation_time"
-            id="reservation_time"
-            type="time"
-            required={true}
-            onChange={handleChange}
-            value={reservation.reservation_time}
-            rows="1"
-          />
-        )}
+          <label className="my-3" htmlFor="reservation_time">
+            Reservation Time
+          </label>
+          {!reservationId ? (
+            <input
+              className="form-control"
+              name="reservation_time"
+              type="time"
+              id="reservation_time"
+              required={true}
+              onChange={handleChange}
+              placeholder="Reservation Time"
+              rows="1"
+              value={reservation.reservation_time}
+            />
+          ) : (
+            <input
+              className="form-control"
+              name="reservation_time"
+              id="reservation_time"
+              type="time"
+              required={true}
+              onChange={handleChange}
+              value={reservation.reservation_time}
+              rows="1"
+            />
+          )}
 
-        <label className="my-3" htmlFor="people">
-          People
-        </label>
-        {!reservationId ? (
-          <input
-            className="form-control"
-            name="people"
-            type="number"
-            id="people"
-            required={true}
-            onChange={handleChange}
-            placeholder="Party Size"
-            rows="1"
-            value={reservation.people}
-          />
-        ) : (
-          <input
-            className="form-control"
-            name="people"
-            id="people"
-            type="number"
-            required={true}
-            onChange={handleChange}
-            value={reservation.people}
-            rows="1"
-          />
-        )}
+          <label className="my-3" htmlFor="people">
+            People
+          </label>
+          {!reservationId ? (
+            <input
+              className="form-control"
+              name="people"
+              type="number"
+              id="people"
+              required={true}
+              onChange={handleChange}
+              placeholder="Party Size"
+              rows="1"
+              value={reservation.people}
+            />
+          ) : (
+            <input
+              className="form-control"
+              name="people"
+              id="people"
+              type="number"
+              required={true}
+              onChange={handleChange}
+              value={reservation.people}
+              rows="1"
+            />
+          )}
         </div>
         <div className="container">
           <div className="row">
