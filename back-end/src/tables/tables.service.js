@@ -18,11 +18,25 @@ function update(updatedTable) {
     .update(updatedTable, "*");
 }
 
-function finish(table_id) {
+function seatTable(updatedTable) {
   return knex("tables")
-    .update({ reservation_id: null }, "*")
-    .where({ table_id })
-    .then((table) => table[0]);
+    .select("*")
+    .where({ table_id: updatedTable.table_id })
+    .update(updatedTable, "*")
+    .then((updatedTables) => updatedTables[0]);
+}
+
+function finishReservation(table_id, reservation_id) {
+  return knex.transaction(function (trx) {
+    return trx("tables")
+      .where({ table_id: table_id })
+      .update({ reservation_id: null })
+      .then(() => {
+        return trx("reservations")
+          .where({ reservation_id })
+          .update({ status: "finished" });
+      });
+  });
 }
 
 function list() {
@@ -33,6 +47,7 @@ module.exports = {
   create,
   read,
   update,
-  delete: finish,
+  seatTable,
+  delete: finishReservation,
   list,
 };

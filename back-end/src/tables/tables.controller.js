@@ -97,8 +97,27 @@ async function update(req, res, next) {
     ...req.body.data,
     table_id: res.locals.table.table_id,
   };
+  const updatedReservation = {
+    ...res.locals.reservation,
+    reservation_id: res.locals.reservation.reservation_id,
+    status: "seated",
+  };
+  await resService.update(updatedReservation);
+
   const data = await service.update(updatedTable);
   res.json({ data });
+}
+
+function validateSeated(req, res, next) {
+  const { status } = res.locals.reservation;
+
+  if (status === "seated") {
+    return next({
+      status: 400,
+      message: "Reservation is already seated.",
+    });
+  }
+  return next();
 }
 
 async function reservationExists(req, res, next) {
@@ -133,9 +152,20 @@ async function isTableOccupied(req, res, next) {
 }
 
 async function finish(req, res) {
-  const { table } = res.locals;
-  await service.delete(table.table_id);
-  res.sendStatus(204);
+  const updatedTable = {
+    ...res.locals.table,
+    reservation_id: null,
+  };
+  const reservation_id = res.locals.table.reservation_id;
+  const reservation = await resService.read(reservation_id);
+  const updatedReservation = {
+    ...reservation,
+    status: "finished",
+  };
+
+  const data = await service.update(updatedTable);
+  await resService.update(updatedReservation);
+  res.json({ data });
 }
 
 module.exports = {
@@ -145,6 +175,7 @@ module.exports = {
     asyncErrorBoundary(tableExists),
     asyncErrorBoundary(capacityPeopleValidator),
     asyncErrorBoundary(tableIsAvailable),
+    asyncErrorBoundary(validateSeated),
     asyncErrorBoundary(update),
   ],
   create: [

@@ -7,38 +7,25 @@ function create(reservation) {
     .then((createdReservation) => createdReservation[0]);
 }
 function read(reservation_id) {
-  return knex("reservations")
-    .select("*")
-    .where({ reservation_id })
-    .first();
+  return knex("reservations").select("*").where({ reservation_id }).first();
 }
 
 function update(updatedReservation) {
   return knex("reservations")
     .select("*")
-    .where({ reservation_id: updatedReservations.post_id })
-    .update(updatedReservation, "*");
+    .where({ reservation_id: updatedReservation.reservation_id })
+    .update(updatedReservation, "*")
+    .then((createdRecords) => createdRecords[0]);
 }
 
 function destroy(reservationId) {
   return knex("reservations").where({ reservation_id: reservationId }).del();
 }
 
-// function list() {
-//   return knex("reservations").select("*").orderBy("reservation_time");
-// }
-
-// function listByDate(reservation_date) {
-//   return knex("reservations")
-//     .select("*")
-//     .where({ reservation_date })
-//     .orderBy("reservation_time");
-// }
-
 function list(reservation_date) {
   return knex("reservations")
-    .select("*")
     .where({ reservation_date })
+    .whereNot({ status: "finished" })
     .orderBy("reservation_time");
 }
 

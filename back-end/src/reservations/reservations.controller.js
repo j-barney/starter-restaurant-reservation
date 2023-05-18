@@ -14,6 +14,55 @@ async function list(req, res) {
   res.json({ data });
 }
 
+async function bookedStatus(req, res, next) {
+  const { status } = req.body.data;
+  if (status) {
+    if (status == "seated" || status == "finished" || status == "cancelled") {
+      return next({
+        status: 400,
+        message: `Cannot create seated or finished reservation.`,
+      });
+    }
+    if (status == "booked") {
+      return next();
+    }
+  }
+  return next();
+}
+
+async function statusValidator(req, res, next) {
+  const validStatus = ["seated", "booked", "finished", "cancelled"];
+  const { status } = req.body.data;
+  if (validStatus.includes(status)) {
+    return next();
+  } else {
+    next({
+      status: 400,
+      message: `The status cannot be ${status} - must be seated, booked, finished, or cancelled.`,
+    });
+  }
+}
+
+async function finishedValidator(req, res, next) {
+  const { reservation } = res.locals;
+  if (reservation.status == "finished") {
+    next({
+      status: 400,
+      message: `Cannot update finished reservations`,
+    });
+  }
+  return next();
+}
+
+async function update(req, res) {
+  const updatedReservation = {
+    ...req.body.data,
+    reservation_id: res.locals.reservation.reservation_id,
+  };
+  const data = await service.update(updatedReservation);
+  res.json({ data });
+}
+
 function pastValidator(req, res, next) {
   const { reservation_date, reservation_time } = req.body.data;
   const today = new Date();
@@ -104,7 +153,10 @@ function bodyDataHas(propertyName) {
     if (req.body.data[propertyName]) {
       return next();
     }
-    next({ status: 400, message: `Reservation must include a ${propertyName}` });
+    next({
+      status: 400,
+      message: `Reservation must include a ${propertyName}`,
+    });
   };
 }
 
@@ -114,7 +166,10 @@ async function reservationExists(req, res, next) {
     res.locals.reservation = currentRes;
     return next();
   }
-  next({ status: 404, message: `Reservation ${req.params.reservation_id} cannot be found.` });
+  next({
+    status: 404,
+    message: `Reservation ${req.params.reservation_id} cannot be found.`,
+  });
 }
 
 async function read(req, res) {
@@ -134,14 +189,21 @@ module.exports = {
     asyncErrorBoundary(dateValidator),
     asyncErrorBoundary(timeValidator),
     asyncErrorBoundary(pastValidator),
-    // asyncErrorBoundary(numberValidator),
     asyncErrorBoundary(bodyDataHas("first_name")),
     asyncErrorBoundary(bodyDataHas("last_name")),
     asyncErrorBoundary(bodyDataHas("mobile_number")),
     asyncErrorBoundary(bodyDataHas("reservation_date")),
     asyncErrorBoundary(bodyDataHas("reservation_time")),
     asyncErrorBoundary(bodyDataHas("people")),
+    asyncErrorBoundary(bookedStatus),
     asyncErrorBoundary(create),
   ],
   list: asyncErrorBoundary(list),
+  update: [
+    asyncErrorBoundary(dataExists),
+    asyncErrorBoundary(reservationExists),
+    asyncErrorBoundary(finishedValidator),
+    asyncErrorBoundary(statusValidator),
+    asyncErrorBoundary(update),
+  ],
 };

@@ -3,18 +3,20 @@ import { finishReservation } from "../utils/api";
 
 function TableView({ loadDashboard, table, index, loadTables }) {
   const deleteHandler = async () => {
+    const abortController = new AbortController();
     const confirm = window.confirm(
       "Is this table ready to seat new guests?\nThis cannot be undone."
     );
     if (confirm) {
       try {
-        await finishReservation(table.table_id, table.reservation_id);
+        await finishReservation(table.table_id, abortController.signal);
         loadDashboard();
         loadTables();
       } catch (e) {
         console.log(e);
       }
     }
+    return () => abortController.abort();
   };
 
   return (

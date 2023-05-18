@@ -1,5 +1,5 @@
 const puppeteer = require("puppeteer");
-const { setDefaultOptions } = require('expect-puppeteer');
+const { setDefaultOptions } = require("expect-puppeteer");
 const fs = require("fs");
 const fsPromises = fs.promises;
 
@@ -22,7 +22,6 @@ describe("US-06 - Reservation status - E2E", () => {
     setDefaultOptions({ timeout: 1000 });
     browser = await puppeteer.launch();
   });
-
   afterAll(async () => {
     await browser.close();
   });
@@ -40,11 +39,13 @@ describe("US-06 - Reservation status - E2E", () => {
         reservation_time: "13:45",
         people: 4,
       });
+      console.log("1");
 
       table = await createTable({
         table_name: `#${Date.now().toString(10)}`,
         capacity: 99,
       });
+      console.log("2");
 
       page = await browser.newPage();
       page.on("console", onPageConsole);
@@ -54,42 +55,51 @@ describe("US-06 - Reservation status - E2E", () => {
       });
       await page.reload({ waitUntil: "networkidle0" });
     });
+    console.log("3");
 
     test("/dashboard displays status", async () => {
       await page.screenshot({
         path: ".screenshots/us-06-dashboard-displays-status.png",
         fullPage: true,
       });
+      console.log("4");
 
       const containsBooked = await containsText(
         page,
         `[data-reservation-id-status="${reservation.reservation_id}"]`,
         "booked"
       );
+      console.log("5");
 
       expect(containsBooked).toBe(true);
     });
+    console.log("6");
 
     test("Seating the reservation changes status to 'seated' and hides Seat button", async () => {
       await page.screenshot({
         path: ".screenshots/us-06-seated-before.png",
         fullPage: true,
       });
+      console.log("7");
 
       await seatReservation(reservation.reservation_id, table.table_id);
+      console.log("8");
 
       await page.reload({ waitUntil: "networkidle0" });
+      console.log("9");
 
       await page.screenshot({
         path: ".screenshots/us-06-seated-after.png",
         fullPage: true,
       });
+      console.log("10");
 
       const containsSeated = await containsText(
         page,
         `[data-reservation-id-status="${reservation.reservation_id}"]`,
         "seated"
       );
+      console.log("11");
 
       expect(containsSeated).toBe(true);
       expect(
@@ -98,6 +108,7 @@ describe("US-06 - Reservation status - E2E", () => {
         )
       ).toBeNull();
     });
+    console.log("12");
 
     test("Finishing the table removes the reservation from the list", async () => {
       await seatReservation(reservation.reservation_id, table.table_id);
