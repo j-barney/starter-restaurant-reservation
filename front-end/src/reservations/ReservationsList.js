@@ -1,7 +1,7 @@
 import React from "react";
 import ReservationView from "./ReservationView";
 
-function ReservationList({ reservations }) {
+function ReservationList({ reservations, loadDashboard }) {
   return (
     <div>
       <table className="table">
@@ -18,7 +18,11 @@ function ReservationList({ reservations }) {
           </tr>
         </thead>
         {reservations.map((reservation, index) => (
-          <ReservationView index={index} reservation={reservation} />
+          <ReservationView
+            index={index}
+            reservation={reservation}
+            loadDashboard={loadDashboard}
+          />
         ))}
       </table>
     </div>

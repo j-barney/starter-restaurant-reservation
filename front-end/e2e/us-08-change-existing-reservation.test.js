@@ -1,5 +1,5 @@
 const puppeteer = require("puppeteer");
-const { setDefaultOptions } = require('expect-puppeteer');
+const { setDefaultOptions } = require("expect-puppeteer");
 const fs = require("fs");
 const fsPromises = fs.promises;
 
@@ -61,8 +61,7 @@ describe("US-08 - Change an existing reservation - E2E", () => {
         await page.waitForSelector(hrefSelector);
 
         await page.screenshot({
-          path:
-            ".screenshots/us-08-dashboard-edit-click-after-no-change-expected.png",
+          path: ".screenshots/us-08-dashboard-edit-click-after-no-change-expected.png",
           fullPage: true,
         });
 
@@ -177,19 +176,22 @@ describe("US-08 - Change an existing reservation - E2E", () => {
       const firstNameInput = await page.$("input[name=first_name]");
       await firstNameInput.click({ clickCount: 3 });
       await firstNameInput.type("John");
-
+      console.log("1");
       const [submitButton] = await page.$x(
         "//button[contains(translate(., 'ACDEFGHIJKLMNOPQRSTUVWXYZ', 'acdefghijklmnopqrstuvwxyz'), 'submit')]"
       );
+      console.log("2");
 
       if (!submitButton) {
         throw new Error("button containing submit not found.");
       }
+      console.log("3");
 
       await page.screenshot({
         path: ".screenshots/us-08-edit-reservation-submit-before.png",
         fullPage: true,
       });
+      console.log("4");
 
       await Promise.all([
         submitButton.click(),
@@ -197,11 +199,13 @@ describe("US-08 - Change an existing reservation - E2E", () => {
       ]);
 
       expect(page.url()).toContain("/dashboard");
+      console.log("5");
 
       await page.screenshot({
         path: ".screenshots/us-08-edit-reservation-submit-after.png",
         fullPage: true,
       });
+      console.log("6");
 
       await expect(page).toMatch(/John/);
     });

@@ -43,6 +43,9 @@ function Routes() {
       <Route exact={true} path="/search">
         <SearchForm />
       </Route>
+      <Route exact={true} path="/reservations/:reservation_id/edit">
+        <ReservationForm />
+      </Route>
       <Route path="/dashboard">
         <Dashboard
           tableLoader={tableLoader}

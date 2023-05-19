@@ -1,7 +1,19 @@
 import React from "react";
+import { resCancel } from "../utils/api";
 
-function ReservationView({ reservation, index }) {
+function ReservationView({ reservation, index, loadDashboard }) {
   // const reservation_id = reservation.reservation_id
+
+  const cancelHandler = async () => {
+    const confirm = window.confirm(
+      "Do you want to cancel this reservation?\nThis cannot be undone."
+    );
+    if (confirm) {
+      await resCancel(reservation);
+      loadDashboard();
+    }
+  };
+
   return (
     <tbody className="table-group-divider">
       <tr key={index}>
@@ -20,6 +32,19 @@ function ReservationView({ reservation, index }) {
               <a href={`/reservations/${reservation.reservation_id}/seat`}>
                 Seat
               </a>
+            </button>
+            <button className="btn btn-outline-info btn-sm m-1" type="button">
+              <a href={`/reservations/${reservation.reservation_id}/edit`}>
+                Edit
+              </a>
+            </button>
+            <button
+              className="btn btn-outline-info btn-sm m-1"
+              onClick={cancelHandler}
+              data-reservation-id-cancel={reservation.reservation_id}
+              type="button"
+            >
+              Cancel
             </button>
           </td>
         ) : null}

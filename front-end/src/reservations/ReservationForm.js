@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useHistory, useParams } from "react-router-dom";
-import { createReservation } from "../utils/api";
+import { createReservation, readRes, updateReservation } from "../utils/api";
 import ErrorAlert from "../layout/ErrorAlert";
-import { formatAsDate } from "../utils/date-time";
+import { formatAsDate, formatAsTime } from "../utils/date-time";
 
 function ReservationForm() {
   const initialFormState = {
@@ -14,19 +14,29 @@ function ReservationForm() {
     people: "",
   };
 
-  const [reservation, setreservation] = useState({ ...initialFormState });
+  const [reservation, setReservation] = useState({ ...initialFormState });
   const [errors, setErrors] = useState(null);
-  const { reservationId } = useParams();
+  const { reservation_id } = useParams();
   const history = useHistory();
+
+  useEffect(() => {
+    async function loadReservation() {
+      if (reservation_id) {
+        const currentRes = await readRes(reservation_id);
+        setReservation(currentRes);
+      }
+    }
+    loadReservation();
+  }, [reservation_id]);
 
   const handleChange = (event) => {
     if (event.target.name === "people") {
-      setreservation({
+      setReservation({
         ...reservation,
         [event.target.name]: Number(event.target.value),
       });
     } else {
-      setreservation({
+      setReservation({
         ...reservation,
         [event.target.name]: event.target.value,
       });
@@ -37,17 +47,30 @@ function ReservationForm() {
     event.preventDefault();
     const abortController = new AbortController();
     const resDate = formatAsDate(reservation.reservation_date);
-
-    createReservation({
-      ...reservation,
-    })
-      .then(() => {
-        history.push(`/dashboard?date=${resDate}`);
+    const resTime = formatAsTime(reservation.reservation_time);
+    console.log(reservation);
+    if (reservation_id) {
+      updateReservation({
+        ...reservation,
+        reservation_time: resTime,
       })
-      .catch(setErrors);
+        .then(() => {
+          history.push(`/dashboard?date=${resDate}`);
+        })
+        .catch(setErrors);
+    } else {
+      createReservation({
+        ...reservation,
+        reservation_id: reservation.reservation_id,
+      })
+        .then(() => {
+          history.push(`/dashboard?date=${resDate}`);
+        })
+        .catch(setErrors);
+    }
 
     if (!errors) {
-      setreservation({ ...initialFormState });
+      setReservation({ ...initialFormState });
     }
     return () => abortController.abort();
   };
@@ -55,7 +78,7 @@ function ReservationForm() {
   return (
     <div>
       <ErrorAlert error={errors} />
-      {!reservationId ? (
+      {!reservation_id ? (
         <h3>Create New Reservation</h3>
       ) : (
         <h3>Edit Reservation</h3>
@@ -65,7 +88,7 @@ function ReservationForm() {
           <label className="my-3" htmlFor="first name">
             First Name
           </label>
-          {!reservationId ? (
+          {!reservation_id ? (
             <input
               className="form-control"
               name="first_name"
@@ -90,7 +113,7 @@ function ReservationForm() {
           <label className="my-3" htmlFor="last_name">
             Last Name
           </label>
-          {!reservationId ? (
+          {!reservation_id ? (
             <input
               className="form-control"
               name="last_name"
@@ -118,7 +141,7 @@ function ReservationForm() {
           <label className="my-3" htmlFor="mobile_number">
             Mobile Number
           </label>
-          {!reservationId ? (
+          {!reservation_id ? (
             <input
               className="form-control"
               name="mobile_number"
@@ -148,7 +171,7 @@ function ReservationForm() {
           <label className="my-3" htmlFor="reservation_date">
             Reservation Date
           </label>
-          {!reservationId ? (
+          {!reservation_id ? (
             <input
               className="form-control"
               name="reservation_date"
@@ -176,7 +199,7 @@ function ReservationForm() {
           <label className="my-3" htmlFor="reservation_time">
             Reservation Time
           </label>
-          {!reservationId ? (
+          {!reservation_id ? (
             <input
               className="form-control"
               name="reservation_time"
@@ -184,7 +207,6 @@ function ReservationForm() {
               id="reservation_time"
               required={true}
               onChange={handleChange}
-              placeholder="Reservation Time"
               rows="1"
               value={reservation.reservation_time}
             />
@@ -204,7 +226,7 @@ function ReservationForm() {
           <label className="my-3" htmlFor="people">
             People
           </label>
-          {!reservationId ? (
+          {!reservation_id ? (
             <input
               className="form-control"
               name="people"
@@ -259,14 +281,3 @@ function ReservationForm() {
 }
 
 export default ReservationForm;
-
-//todo:
-// form with the following fields:
-// First name: <input name="first_name" />
-// Last name: <input name="last_name" />
-// Mobile number: <input name="mobile_number" />
-// Date of reservation: <input name="reservation_date" />
-// Time of reservation: <input name="reservation_time" />
-// Number of people in the party, which must be at least 1 person. <input name="people" />
-//submit button which saves the res and then displays dashboard with date of res
-//cancel button that returns user to previous page
