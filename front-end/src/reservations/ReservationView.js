@@ -1,7 +1,7 @@
 import React from "react";
 import { resCancel } from "../utils/api";
 
-function ReservationView({ reservation, index, loadDashboard }) {
+function ReservationView({ reservation, loadDashboard }) {
   // const reservation_id = reservation.reservation_id
 
   const cancelHandler = async () => {
@@ -16,7 +16,7 @@ function ReservationView({ reservation, index, loadDashboard }) {
 
   return (
     <tbody className="table-group-divider">
-      <tr key={index}>
+      <tr key={reservation.reservation_id}>
         <td>{reservation.first_name}</td>
         <td>{reservation.last_name}</td>
         <td>{reservation.mobile_number}</td>

@@ -1,4 +1,25 @@
-.side-bar {
-  background-color: #393a44;
+/* .side-bar {
+  background-color: #abacb7;
   min-width: 200px;
 }
+
+body {
+  background-color: #ffffff;
+}
+.group {
+display: flex;
+flex-direction: column;
+margin-bottom: 100px;
+}
+
+@media all and (min-width: 600px) { 
+  body {
+    background-color: #ffffff;
+  }
+
+  .group {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 100px;
+}
+} */

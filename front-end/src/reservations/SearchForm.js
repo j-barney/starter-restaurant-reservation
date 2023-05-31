@@ -22,6 +22,7 @@ function SearchForm() {
     if (!errors) {
       setReservations([]);
     }
+
     return () => abortController.abort();
   };
 

@@ -15,13 +15,15 @@ function TableSelector({ tableLoader, setTableLoader }) {
   };
 
   useEffect(() => {
+    const abortController = new AbortController();
     async function loadTables() {
       if (reservation_id) {
-        const tablesList = await listTables();
+        const tablesList = await listTables(abortController.signal);
         setTables(() => tablesList);
       }
     }
     loadTables();
+    return () => abortController.abort();
   }, [reservation_id]);
 
   const submitHandler = (event) => {

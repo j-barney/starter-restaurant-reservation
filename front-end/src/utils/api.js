@@ -136,6 +136,7 @@ export async function updateReservation(updatedReservation, signal) {
     method: "PUT",
     headers,
     body: JSON.stringify({ data: updatedReservation }),
+    signal,
   };
   return await fetchJson(url, options, updatedReservation);
 }

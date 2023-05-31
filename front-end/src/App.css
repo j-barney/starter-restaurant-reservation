@@ -1,0 +1,35 @@
+@media all and (min-width: 480px) {
+    header {
+      display: flex;
+      justify-content: space-between;
+      padding: 0 30px;
+    }
+  
+    header h1 {
+       margin: 14px 0;
+      padding-top: 0;
+    }
+  
+    header nav {
+      margin-top: 15px;
+    }
+   
+    header nav ul li a:hover {
+      color: #bdbdbd;
+    }
+  
+    .item-double {
+      flex: 2;
+    }
+  
+    .item {
+      align-items: center;
+      justify-content: center;
+    }
+  
+    .group {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+    }
+}

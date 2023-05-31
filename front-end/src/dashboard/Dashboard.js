@@ -48,41 +48,67 @@ function Dashboard({ date, setTableLoader, tableLoader }) {
 
   return (
     <main>
-      <h1>Dashboard</h1>
-      <div className="d-md-flex mb-3">
-        <h4 className="mb-0">Reservations for date</h4>
+      <div className="container-fluid">
+        <div className="d-inline-flex justify-content-center flex-column container">
+          <div className="row">
+            <div className="d-md-flex justify-content-center mb-3">
+              <h4 className="mb-0 pl-3">Reservations for {date}</h4>
+            </div>
+          </div>
+          <div className="row">
+            <div className="col-12">
+              <ErrorAlert error={reservationsError} />
+            </div>
+          </div>
+          <div className="row">
+            <div className="col-12">
+              <ReservationsList
+                loadDashboard={loadDashboard}
+                reservations={reservations}
+              />
+            </div>
+            <div className="row">
+              <div className="col-12 mx-3 mb-2">
+                <TableList
+                  loadDashboard={loadDashboard}
+                  tables={tables}
+                  loadTables={loadTables}
+                />
+              </div>
+            </div>
+
+            <div class="d-flex cd-inline-flex flex-column container">
+              <div className="row">
+                <div className="col-12">
+                  <div>
+                    <button
+                      type="button"
+                      onClick={() => previousBtnHandler(date)}
+                      className="btn btn-outline-info btn-sm m-1"
+                    >
+                      Previous Day
+                    </button>
+                    <button
+                      type="button"
+                      className="btn btn-outline-info btn-sm m-1"
+                      onClick={() => history.push(`/dashboard?date=${today()}`)}
+                    >
+                      Today
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => nextBtnHandler(date)}
+                      className="btn btn-outline-info btn-sm m-1"
+                    >
+                      Next Day
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-      <ErrorAlert error={reservationsError} />
-      <ReservationsList
-        loadDashboard={loadDashboard}
-        reservations={reservations}
-      />
-      <TableList
-        loadDashboard={loadDashboard}
-        tables={tables}
-        loadTables={loadTables}
-      />
-      <button
-        type="button"
-        onClick={() => previousBtnHandler(date)}
-        className="btn btn-outline-info btn-sm m-1"
-      >
-        Previous Day
-      </button>
-      <button
-        type="button"
-        className="btn btn-outline-info btn-sm m-1"
-        onClick={() => history.push(`/dashboard?date=${today()}`)}
-      >
-        Today
-      </button>
-      <button
-        type="button"
-        onClick={() => nextBtnHandler(date)}
-        className="btn btn-outline-info btn-sm m-1"
-      >
-        Next Day
-      </button>
     </main>
   );
 }

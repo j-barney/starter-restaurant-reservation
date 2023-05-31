@@ -32,9 +32,12 @@ function TablesForm({ tableLoader, setTableLoader }) {
     event.preventDefault();
     const abortController = new AbortController();
 
-    createTable({
-      ...table,
-    })
+    createTable(
+      {
+        ...table,
+      },
+      abortController.signal
+    )
       .then(() => {
         history.push(`/dashboard`);
       })
@@ -110,7 +113,7 @@ function TablesForm({ tableLoader, setTableLoader }) {
               <div className="my-3">
                 <button
                   type="button"
-                  className="btn btn-secondary"
+                  className="btn btn-outline-secondary"
                   onClick={history.goBack}
                 >
                   Cancel
@@ -118,7 +121,7 @@ function TablesForm({ tableLoader, setTableLoader }) {
               </div>
               <div className="my-3 px-2">
                 <button
-                  className="btn btn-primary"
+                  className="btn btn-outline-info"
                   onClick={submitHandler}
                   type="submit"
                 >

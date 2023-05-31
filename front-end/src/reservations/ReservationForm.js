@@ -20,13 +20,18 @@ function ReservationForm() {
   const history = useHistory();
 
   useEffect(() => {
+    const abortController = new AbortController();
     async function loadReservation() {
       if (reservation_id) {
-        const currentRes = await readRes(reservation_id);
+        const currentRes = await readRes(
+          reservation_id,
+          abortController.signal
+        );
         setReservation(currentRes);
       }
     }
     loadReservation();
+    return () => abortController.abort();
   }, [reservation_id]);
 
   const handleChange = (event) => {
@@ -50,19 +55,25 @@ function ReservationForm() {
     const resTime = formatAsTime(reservation.reservation_time);
     console.log(reservation);
     if (reservation_id) {
-      updateReservation({
-        ...reservation,
-        reservation_time: resTime,
-      })
+      updateReservation(
+        {
+          ...reservation,
+          reservation_time: resTime,
+        },
+        abortController.signal
+      )
         .then(() => {
           history.push(`/dashboard?date=${resDate}`);
         })
         .catch(setErrors);
     } else {
-      createReservation({
-        ...reservation,
-        reservation_id: reservation.reservation_id,
-      })
+      createReservation(
+        {
+          ...reservation,
+          reservation_id: reservation.reservation_id,
+        },
+        abortController.signal
+      )
         .then(() => {
           history.push(`/dashboard?date=${resDate}`);
         })
@@ -257,7 +268,7 @@ function ReservationForm() {
               <div className="my-3">
                 <button
                   type="button"
-                  className="btn btn-secondary"
+                  className="btn btn-outline-secondary"
                   onClick={history.goBack}
                 >
                   Cancel
@@ -265,7 +276,7 @@ function ReservationForm() {
               </div>
               <div className="my-3 px-2">
                 <button
-                  className="btn btn-primary"
+                  className="btn btn-outline-info"
                   onClick={submitHandler}
                   type="submit"
                 >
