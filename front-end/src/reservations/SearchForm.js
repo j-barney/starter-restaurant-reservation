@@ -7,10 +7,11 @@ function SearchForm() {
   const [reservations, setReservations] = useState([]);
   const [errors, setErrors] = useState(null);
 
+  //sets the nunmber state to whatever the value entered is
   const handleChange = (event) => {
     setMobileNumber(event.target.value);
   };
-
+  //sends phone number to search functionality
   const submitHandler = (event) => {
     event.preventDefault();
     const abortController = new AbortController();

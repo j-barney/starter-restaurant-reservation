@@ -57,11 +57,13 @@ function Dashboard({ date, setTableLoader, tableLoader }) {
           </div>
           <div className="row">
             <div className="col-12">
+              {/* displays any errors */}
               <ErrorAlert error={reservationsError} />
             </div>
           </div>
           <div className="row">
             <div className="col-12">
+              {/* shows existing reservations */}
               <ReservationsList
                 loadDashboard={loadDashboard}
                 reservations={reservations}
@@ -69,6 +71,7 @@ function Dashboard({ date, setTableLoader, tableLoader }) {
             </div>
             <div className="row">
               <div className="col-12 mx-3 mb-2">
+                {/* shows list of tables and reservations at them */}
                 <TableList
                   loadDashboard={loadDashboard}
                   tables={tables}

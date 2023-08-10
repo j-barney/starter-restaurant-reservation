@@ -13,7 +13,7 @@ function TableSelector({ tableLoader, setTableLoader }) {
   const goBack = () => {
     history.goBack();
   };
-
+  //if there's a reservation id, loads the table list
   useEffect(() => {
     const abortController = new AbortController();
     async function loadTables() {
@@ -25,7 +25,7 @@ function TableSelector({ tableLoader, setTableLoader }) {
     loadTables();
     return () => abortController.abort();
   }, [reservation_id]);
-
+  //adds reservation to table
   const submitHandler = (event) => {
     event.preventDefault();
     const abortController = new AbortController();

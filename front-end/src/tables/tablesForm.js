@@ -13,7 +13,7 @@ function TablesForm({ tableLoader, setTableLoader }) {
   const [errors, setErrors] = useState(null);
   const { tableId } = useParams();
   const history = useHistory();
-
+  //handles changes to the form
   const handleChange = (event) => {
     if (event.target.name === "capacity") {
       setTable({
@@ -27,7 +27,7 @@ function TablesForm({ tableLoader, setTableLoader }) {
       });
     }
   };
-
+  //adds new table to DB
   function submitHandler(event) {
     event.preventDefault();
     const abortController = new AbortController();

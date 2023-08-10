@@ -5,6 +5,7 @@ import ErrorAlert from "../layout/ErrorAlert";
 import { formatAsDate, formatAsTime } from "../utils/date-time";
 
 function ReservationForm() {
+  //creates default state for form
   const initialFormState = {
     first_name: "",
     last_name: "",
@@ -18,7 +19,7 @@ function ReservationForm() {
   const [errors, setErrors] = useState(null);
   const { reservation_id } = useParams();
   const history = useHistory();
-
+  //loads a reservation if there is one and prefills that information to the state
   useEffect(() => {
     const abortController = new AbortController();
     async function loadReservation() {
@@ -33,7 +34,7 @@ function ReservationForm() {
     loadReservation();
     return () => abortController.abort();
   }, [reservation_id]);
-
+  //change handler for form inputs
   const handleChange = (event) => {
     if (event.target.name === "people") {
       setReservation({
@@ -47,7 +48,7 @@ function ReservationForm() {
       });
     }
   };
-
+  //on submit, formats the date and time and if there's an existing ID, updates the reservation, else creates new reservation
   const submitHandler = (event) => {
     event.preventDefault();
     const abortController = new AbortController();
@@ -156,7 +157,7 @@ function ReservationForm() {
             <input
               className="form-control"
               name="mobile_number"
-              type="text"
+              type="number"
               maxLength="10"
               id="mobile_number"
               required={true}
